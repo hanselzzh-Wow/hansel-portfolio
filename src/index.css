@@ -1,0 +1,239 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'DM Sans', 'PingFang SC', ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: 'kern' 1;
+  }
+
+  ::selection {
+    background-color: rgba(166, 61, 42, 0.16);
+  }
+
+  /* 大标题收紧字距，正文放松行高 —— 编辑排版的基本功 */
+  .display {
+    font-family: 'Instrument Serif', 'Songti SC', Georgia, serif;
+    letter-spacing: -0.02em;
+    line-height: 1.02;
+    font-weight: 400;
+  }
+}
+
+@layer utilities {
+  /* 边注：桌面端浮在正文右侧，窄屏退回正文流 */
+  .sidenote {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ── 首屏 ──────────────────────────────────────────────────────────────────
+   序独占一整屏，仅此而已 —— 不吸附、不接管滚动。
+
+   这里原本有一套 scroll-snap（proximity + scroll-snap-stop: always）。
+   线上实测的结果是整个页面滚不动：怎么划都被拽回起点。
+   原因是它跟 html 上本来就有的 scroll-behavior: smooth 互相拉扯 ——
+   平滑滚动还没走完，吸附就把位置抢回去，两者反复覆盖对方。
+
+   不修参数，直接删掉。「首屏占满一屏」只需要 min-height，
+   一行 CSS 就够；为了一点翻页手感赌上"页面能不能滚"，这个交易不成立。
+   ───────────────────────────────────────────────────────────────────────── */
+.page {
+  min-height: 100svh;          /* svh 而不是 vh：iOS 地址栏收缩时不会整页跳一下 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ── 版面细节 ──────────────────────────────────────────────────────────────
+   这些是刻意的「不完美」：错位的基线、长短不一的分隔线、悬挂的编号。
+   算法会把它们对齐，人不会。
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* 章节编号悬挂在版心外面 */
+.hang {
+  position: absolute;
+  right: calc(100% + 1.25rem);
+  top: 0.15em;
+}
+
+@media (max-width: 900px) {
+  .hang {
+    position: static;
+    display: block;
+    margin-bottom: 0.35rem;
+  }
+}
+
+/* 分隔线：不是等宽的一根，带一个朱砂色的起头 */
+.rule {
+  height: 1px;
+  background: currentColor;
+  opacity: 0.22;
+}
+
+.rule-lead::before {
+  content: '';
+  display: block;
+  width: 2.5rem;
+  height: 2px;
+  background: #A63D2A;
+  margin-bottom: -1.5px;
+}
+
+/* 链接：下划线用背景实现，才能控制粗细和距离 */
+.link {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  padding-bottom: 1px;
+  transition: background-size 0.25s ease, color 0.25s ease;
+}
+
+.link:hover {
+  color: #A63D2A;
+  background-size: 100% 2px;
+}
+
+.dark .link:hover {
+  color: #E08A72;
+}
+
+/* ── 首字下沉 ──────────────────────────────────────────────────────────────
+   每章正文第一段。中文方块字比拉丁字母重，所以下沉两行就够，三行会压塌版面。
+   ───────────────────────────────────────────────────────────────────────── */
+.drop-cap::first-letter {
+  float: left;
+  font-family: 'Instrument Serif', 'Songti SC', Georgia, serif;
+  font-size: 2.9em;
+  line-height: 0.82;
+  margin: 0.06em 0.09em 0 0;
+  color: #A63D2A;
+}
+
+.dark .drop-cap::first-letter {
+  color: #E08A72;
+}
+
+/* 正文里的强调数字 */
+.figure {
+  font-family: 'Instrument Serif', 'Songti SC', Georgia, serif;
+  font-size: 1.15em;
+  line-height: 1;
+  color: #A63D2A;
+}
+
+.dark .figure {
+  color: #E08A72;
+}
+
+/* ── 版本滑块 ─────────────────────────────────────────────────────────────
+   原生 range 自带系统控件的样子，跟这个版面完全不搭 —— 全部重画：
+   一条细轨道，一个方形的朱砂滑块，没有圆角，没有阴影。
+   ───────────────────────────────────────────────────────────────────────── */
+.vslider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 22px;
+  background: transparent;
+  cursor: ew-resize;
+}
+
+.vslider::-webkit-slider-runnable-track {
+  height: 1px;
+  background: currentColor;
+  opacity: 0.35;
+}
+
+.vslider::-moz-range-track {
+  height: 1px;
+  background: currentColor;
+  opacity: 0.35;
+}
+
+.vslider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 3px;
+  height: 20px;
+  margin-top: -10px;
+  background: #A63D2A;
+  border: none;
+  border-radius: 0;
+}
+
+.vslider::-moz-range-thumb {
+  width: 3px;
+  height: 20px;
+  background: #A63D2A;
+  border: none;
+  border-radius: 0;
+}
+
+.dark .vslider::-webkit-slider-thumb {
+  background: #E08A72;
+}
+
+.dark .vslider::-moz-range-thumb {
+  background: #E08A72;
+}
+
+.vslider:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* 刻度：每一版一根短线，密度本身就说明磨了多少次 */
+.vticks {
+  display: flex;
+  justify-content: space-between;
+  height: 4px;
+}
+
+.vticks span {
+  width: 1px;
+  background: currentColor;
+  opacity: 0.3;
+}
+
+.vticks span[data-on='true'] {
+  opacity: 1;
+  background: #A63D2A;
+}
+
+.dark .vticks span[data-on='true'] {
+  background: #E08A72;
+}
+
+/* 截图横向滚动条压细 */
+.filmstrip {
+  scrollbar-width: thin;
+}
+
+.filmstrip::-webkit-scrollbar {
+  height: 3px;
+}
+
+.filmstrip::-webkit-scrollbar-thumb {
+  background: currentColor;
+  opacity: 0.3;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}
