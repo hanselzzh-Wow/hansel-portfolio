@@ -517,13 +517,7 @@ export default function App() {
       <footer className={`border-t ${dark ? 'border-[#2A2621]' : 'border-rule'}`}>
         <div className={`mx-auto max-w-[60rem] px-6 py-10 font-mono text-[11px] leading-relaxed ${muted} flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2`}>
           <p>© 2026 {lang === 'en' ? 'Hansel Zhang' : '张增辉'} · {w.footer.rights}</p>
-          <p>
-            {w.footer.colophon}
-            {' · '}
-            <a href={`${BASE}listing.html`} className="hover:text-cinnabar dark:hover:text-[#E08A72] transition-colors">
-              {lang === 'en' ? 'also a listing page' : '也有一个商品详情页'}
-            </a>
-          </p>
+          <p>{w.footer.colophon}</p>
         </div>
       </footer>
     </div>
