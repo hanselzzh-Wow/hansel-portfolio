@@ -15,60 +15,29 @@
 
 export const tools = ['Excel', 'PowerPoint', 'Figma', 'Canva', 'CapCut', 'Claude', 'ChatGPT', 'Gemini']
 
-// ── 发布流程演示用的地点库 ────────────────────────────────────────────────
-// t = 地点名，s = 地区串，模拟 MKLocalSearchCompleter 返回的 title / subtitle。
-// 故意混进了几类难拆的：自治县挂在地级市后面、地级州套县级市、直辖市、
-// 特别行政区、多段的拉丁地址 —— 这些正是真机上那套拆分逻辑要对付的东西。
-export const places = [
-  { t: '西湖断桥', s: '中国浙江省杭州市西湖区' },
-  { t: '和平饭店', s: '中国上海市黄浦区' },
-  { t: '玉龙雪山', s: '中国云南省丽江市玉龙纳西族自治县' },
-  { t: '告庄西双景', s: '中国云南省西双版纳傣族自治州景洪市' },
-  { t: '鼓浪屿日光岩', s: '中国福建省厦门市思明区' },
-  { t: '黄鹤楼', s: '中国湖北省武汉市武昌区' },
-  { t: '华中科技大学', s: '中国湖北省武汉市洪山区' },
-  { t: '维多利亚港', s: '中国香港特别行政区油尖旺区' },
-  { t: '喀什古城', s: '中国新疆维吾尔自治区喀什地区喀什市' },
-  { t: 'Champ de Mars', s: '5 Av. Anatole France, 75007 Paris, France' },
-  { t: 'Shibuya Crossing', s: 'Shibuya City, Tokyo, Japan' },
-]
 
-// App 截图：public/screens/，1320×2868 的真机截图缩到宽 540。
+// App 截图：public/screens/，从构建 16 的模拟器现拍，缩到宽 540。
+// 四张都是未登录或空态 —— 帮助页那张拍到了生产环境里真实的心愿内容，撤掉了。
 export const screens = [
   {
     file: '01-home.png',
-    zh: { label: '首页', note: '没有故事就说没有。空态写清楚要等发布者单独同意才会公开，不摆假数据、不造点赞数。' },
-    en: { label: 'Home', note: "When there's nothing, it says so. The empty state explains that stories only go public with separate consent — no fake counts." },
+    zh: { label: '首页', note: '没有故事就说没有。不摆假数据、不造点赞数。' },
+    en: { label: 'Home', note: "When there's nothing, it says so. No fake data, no invented counts." },
   },
   {
-    file: '02-search.png',
-    zh: { label: '搜索', note: '按地点找心愿。' },
-    en: { label: 'Search', note: 'Find a wish by place.' },
+    file: '03-publish.png',
+    zh: { label: '发布', note: '地点原本是五个写死的城市。现在一个搜索框，MapKit 实时补全。' },
+    en: { label: 'Publish', note: 'Location used to be five hardcoded cities. One search field now, live MapKit completion.' },
   },
   {
-    file: '03-help.png',
-    zh: { label: '帮助', note: '原来叫「附近」。改成「帮助」是因为这个产品的动作不是浏览，是应下一件事。图标用两只手相握。' },
-    en: { label: 'Help', note: 'Used to be "Nearby". Renamed because the verb here isn\'t browsing, it\'s taking something on. The icon is two hands meeting.' },
-  },
-  {
-    file: '04-publish.png',
-    zh: { label: '发布', note: '就是这一页。地点原本只能从五个写死的城市里选，后来换成 MapKit 实时补全。' },
-    en: { label: 'Publish', note: 'This is the screen. Location used to be five hardcoded cities; it became live MapKit completion.' },
+    file: '04-chat.png',
+    zh: { label: '私聊', note: '只在发布者和响应者之间进行，所以必须登录。' },
+    en: { label: 'Chat', note: 'Only between the two people involved, so it needs an account.' },
   },
   {
     file: '05-profile.png',
-    zh: { label: '我的', note: '「我发布的」和「我帮助的」都收在这里，而不是单独占一个 Dock 位置。' },
-    en: { label: 'Profile', note: 'Both "posted" and "helped" live here, instead of taking their own dock slot.' },
-  },
-  {
-    file: '06-home-demo.png',
-    zh: { label: '首页（演示数据）', note: '有内容时首页的样子。' },
-    en: { label: 'Home (demo data)', note: 'What home looks like once there is something to show.' },
-  },
-  {
-    file: '07-profile-signin-entry.png',
-    zh: { label: '登录入口', note: 'Sign in with Apple。账户删除和令牌撤销整条链都挂在这里。' },
-    en: { label: 'Sign-in', note: 'Sign in with Apple. Account deletion and token revocation both hang off this.' },
+    zh: { label: '我的', note: 'Sign in with Apple，只接收匿名标识。账户删除与令牌撤销挂在这里。' },
+    en: { label: 'Profile', note: 'Sign in with Apple, anonymous identifier only. Account deletion and token revocation live here.' },
   },
 ]
 
@@ -159,7 +128,6 @@ export const content = {
     },
     exp: {
       title: 'Experience',
-      epigraph: 'The rating is the outcome; these are the few places you can put a hand on it.',
       items: [
         {
           key: 'anker',
@@ -222,7 +190,6 @@ export const content = {
     },
     proj: {
       title: 'Work',
-      epigraph: 'Reversing cost me weeks. Pushing on would have cost more.',
       screensLabel: 'The app',
       screensHint: 'Tap any screen to enlarge.',
       close: 'Close',
@@ -238,52 +205,7 @@ export const content = {
         gratia: 'This is the build that went to App Store review — number 16. Post a wish, search, help, profile: go anywhere. The publish flow further up is a web mock-up; this is not.',
         artemi: 'All five primary screens respond. On Home, touch Polly — that reaction is the thing a screenshot can never hand you. Every number is mocked locally: no Bluetooth, no GPS, no third-party AI.',
       },
-      demo: {
-        label: 'Try it yourself',
-        before: 'Before',
-        after: 'After',
-        beforeHint: "Five cities, take it or leave it. The tree outside your childhood home isn't one of them — that was the product.",
-        afterHint: 'Type anywhere. The city is parsed out of the completion result.',
-        stepOf: 'Step 1 of 3',
-        stepName: 'Place',
-        title: 'Where should it go',
-        sub: 'Pick an occasion, a city, and the exact spot.',
-        sceneLabel: 'Occasion',
-        scenes: ['Birthday', 'Encouragement', 'Graduation', 'Love note', 'Holiday', 'Something else'],
-        cityLabel: 'Target city',
-        landmarkLabel: 'Exact spot',
-        landmarkPlaceholder: 'e.g. the Broken Bridge, West Lake',
-        searchPlaceholder: 'Search a place, or just write one',
-        noMatch: 'No match — we will use exactly what you wrote.',
-        parsedFrom: 'parsed from',
-        cityField: 'City',
-        landmarkField: 'Spot',
-        cont: 'Continue',
-        done: 'On device this posts to the Cloudflare Worker. The demo stops here.',
-        reset: 'Try again',
-        disclaimer: 'Web mock-up. The real app uses MKLocalSearchCompleter — text lookup only, never reads device location, so it needs no permission prompt.',
-      },
       items: [
-        {
-          key: 'roadnottaken',
-          name: 'The Road Not Taken',
-          tagline: 'Keep someone\u2019s decision memory, so they can gradually see themselves.',
-          date: 'Aug 2026 \u2013 present',
-          role: 'Solo product and build',
-          status: 'Prototype closes the loop',
-          stack: 'UIKit \u00b7 SpriteKit \u00b7 Core Animation \u00b7 cloud model',
-          sidenotes: [
-            { k: 'n=0', v: 'first value moment' },
-            { k: '1,726', v: 'lines of Swift' },
-            { k: '3 bands', v: 'of allowed tone' },
-          ],
-          desc: [
-            'A record exists only where someone actually stopped and hesitated. It keeps the A and the B they really chose between, and how it really felt afterwards; the branch not taken is never simulated. Hesitation being the inclusion criterion means the sample is not every day but a precisely defined subset \u2014 exactly the days a decision was in question \u2014 and every insight has to carry that condition to stay true.',
-            'The version that mattered was v0.2, and it came out of auditing my own v0.1. Its whole payoff sat behind accumulated comparisons: roughly 20\u201330 entries across four to eight weeks. The same document had also, deliberately, given up streaks, counters, badges and push. Both decisions were right on their own and fatal together \u2014 eight weeks with nothing to give and nothing to hold anyone. v0.2 does not lower the threshold. It adds three mechanisms that need no sample at all: a question worth being asked on the very first entry, expectation folded into the choosing gesture so that one record already produces "you thought 4, it was 7", and plain recognition the second time the same hesitation shows up.',
-            'The model is kept on a short leash. Template hits resolve locally and deterministically; only a miss routes to the cloud. Cross-record analysis is retrieval-augmented from the person\u2019s own history, never from anything generic. And the tone is banded by sample size: one record may only restate, two may only sit side by side, and comparatives are unlocked at three. At n=1 the system has no standing to compare \u2014 but it does have standing to remember.',
-            'The hard part is that being asked a good question is a value you cannot observe. So it gets three proxies: how often someone adds more text after the question lands, how long they pause before choosing, how often they change their mind. The third one is the honest one \u2014 if it is zero, the question was decoration. Shipped as a runnable UIKit and SpriteKit prototype, 1,726 lines: a road walking continuously from bottom-left to top-right, choices arriving as signposts rather than as a new screen. No SwiftUI here on purpose \u2014 continuous space is the whole metaphor, and page transitions would break it.',
-          ],
-        },
         {
           key: 'artemi',
           name: 'Artemi · Smart Pet Collar',
@@ -324,6 +246,32 @@ export const content = {
             'The publish flow used to make you pick from five hardcoded cities. A product about going somewhere you can\'t reach, letting an array in the client decide what counts as far away. It\'s MapKit live completion now — and specifically MKLocalSearchCompleter rather than a third-party places API, because it only does text lookup and never reads device location. No permission prompt, no bill.',
             "Apple requires apps with account deletion to revoke sign-in tokens on the way out, and reviewers test it. Before writing any production config I probed the real endpoint with a deliberately invalid code just to see how it would refuse. And I refused to accept database state as proof — the only evidence I'd take was the app actually disappearing from Apple ID settings.",
           ],
+          link: {
+            href: 'https://testflight.apple.com/join/ftyuGZ8n',
+            badgeTop: 'Test it on',
+            label: 'TestFlight',
+            note: 'Needs an iPhone and the TestFlight app.',
+            qr: 'testflight-qr.svg',
+          },
+        },
+        {
+          key: 'roadnottaken',
+          name: 'The Road Not Taken',
+          tagline: 'Keep someone\u2019s decision memory, so they can gradually see themselves.',
+          date: 'Aug 2026 \u2013 present',
+          role: 'Solo product and build',
+          status: 'Prototype closes the loop',
+          stack: 'UIKit \u00b7 SpriteKit \u00b7 Core Animation \u00b7 cloud model',
+          sidenotes: [
+            { k: 'n=0', v: 'first value moment' },
+            { k: '1,726', v: 'lines of Swift' },
+            { k: '3 bands', v: 'of allowed tone' },
+          ],
+          desc: [
+            '只在一个人真的停下来犹豫的那一刻才产生记录。它保存你真的选过的 A 与 B，以及事后真实的感受；没选的那条路从不虚构结果。',
+            '不用打卡、连续天数和推送，所以第一条记录就得自己产出价值。把预期折进选择的手势，一条记录就能长出「你以为 4 分，实际 7 分」；同类犹豫第二次出现时，直接说出上一次。',
+            '模型只做一件事：把一团纠结拆成两条路。模板命中走本地，未命中才去云端。语气按样本量分档 —— 1 条只能陈述，≥3 条才允许比较级。n=1 时系统没有资格比较，但有资格记得。',
+          ],
         },
         {
           key: 'milktea',
@@ -342,13 +290,12 @@ export const content = {
             'Two hundred forty-eight valid questionnaires and three long interviews, framed with herd effect and anchoring.',
             'The useful finding was a ceiling, not a trend: more than 65% would pay at most ¥5 extra for a collab, and anime IP drove purchase intent far past every other category at 67.7%. That turned into a tiered-pricing plus differentiated-merch proposal aimed at the old problem where a campaign is loud and sales are flat.',
           ],
-          link: { href: 'milktea.pdf', label: 'Read the full report (PDF)' },
+          link: { href: 'milktea.pdf', badgeTop: 'Milk tea IP collab', label: 'Read the full report' },
         },
       ],
     },
     edu: {
       title: 'Education',
-      epigraph: 'The fastest way I know to find out an argument is hollow.',
       school: 'Huazhong University of Science and Technology',
       major: "Int'l Business + English, dual degree",
       date: 'Sep 2023 – Jun 2027',
@@ -370,7 +317,6 @@ export const content = {
     },
     log: {
       title: 'Changelog',
-      epigraph: 'This site, honestly accounted for.',
       note: 'This site, honestly accounted for.',
       items: [
         { v: 'v.I', date: '13 May 2026', text: 'First version. Generated somewhere else, then dragged into GitHub as a folder of built files.' },
@@ -418,7 +364,6 @@ export const content = {
     },
     exp: {
       title: '实习',
-      epigraph: '星级只是结果，能伸手的地方就这几处。',
       items: [
         {
           key: 'anker',
@@ -481,7 +426,6 @@ export const content = {
     },
     proj: {
       title: '做过的东西',
-      epigraph: '退回来花掉了几周，硬撑下去会更贵。',
       screensLabel: '界面',
       screensHint: '点任意一屏放大。',
       close: '关闭',
@@ -497,52 +441,7 @@ export const content = {
         gratia: '这就是提交到 App Store 审核的那个构建，第 16 版。发布心愿、搜索、帮助、我的，随便点。上面那个发布流程是网页仿的，这个不是。',
         artemi: '五个一级页面都能点。「家」那一页轻触一下 Polly —— 那个反应是静态截图永远给不了的。数据全部本地模拟，没接蓝牙、GPS 或任何第三方 AI。',
       },
-      demo: {
-        label: '亲手试一次',
-        before: '改造前',
-        after: '改造后',
-        beforeHint: '只有这五个城市。你老家巷口那棵树不在里面 —— 这就是当时的产品。',
-        afterHint: '输入任何地方。城市是从补全结果的地区串里自动拆出来的。',
-        stepOf: '第 1 步，共 3 步',
-        stepName: '地点',
-        title: '想送到哪里',
-        sub: '选择心愿分类、城市和具体地标。',
-        sceneLabel: '心愿场景',
-        scenes: ['生日祝福', '加油鼓励', '毕业祝福', '浪漫表白', '节日问候', '其他小心愿'],
-        cityLabel: '目标城市',
-        landmarkLabel: '具体地标 / 位置',
-        landmarkPlaceholder: '例如：西湖断桥、和平饭店门口',
-        searchPlaceholder: '搜地点，或者直接写',
-        noMatch: '没有匹配的地点 —— 直接用你写的这个。',
-        parsedFrom: '从这里拆出来的',
-        cityField: '城市',
-        landmarkField: '地标',
-        cont: '继续',
-        done: '这一步在真机上会提交到 Cloudflare Worker。演示到此为止。',
-        reset: '再试一次',
-        disclaimer: '网页模拟。真机用的是 MKLocalSearchCompleter —— 只做文本检索、不读设备位置，所以不用申请定位权限。',
-      },
       items: [
-        {
-          key: 'roadnottaken',
-          name: '\u672a\u9009\u62e9\u7684\u8def \u00b7 A/B \u4eba\u751f',
-          tagline: '\u66ff\u4eba\u4fdd\u5b58\u51b3\u7b56\u8bb0\u5fc6\uff0c\u8ba9\u4eba\u9010\u6e10\u770b\u6e05\u81ea\u5df1\u3002',
-          date: '2026.08 \u2013 \u81f3\u4eca',
-          role: '\u72ec\u7acb\u4ea7\u54c1\u5b9a\u4e49\u4e0e\u5b9e\u73b0',
-          status: '\u539f\u578b\u5df2\u8dd1\u901a\u5b8c\u6574\u95ed\u73af',
-          stack: 'UIKit \u00b7 SpriteKit \u00b7 Core Animation \u00b7 \u4e91\u7aef\u6a21\u578b',
-          sidenotes: [
-            { k: 'n=0', v: '\u7b2c\u4e00\u4ef7\u503c\u65f6\u523b' },
-            { k: '1726', v: 'Swift \u884c\u6570' },
-            { k: '3 \u6863', v: '\u6d1e\u5bdf\u8bed\u6c14\u7ea6\u675f' },
-          ],
-          desc: [
-            '\u53ea\u5728\u4e00\u4e2a\u4eba\u771f\u7684\u505c\u4e0b\u6765\u72b9\u8c6b\u7684\u90a3\u4e00\u523b\uff0c\u624d\u4ea7\u751f\u4e00\u6761\u8bb0\u5f55\u3002\u5b83\u4fdd\u5b58\u4f60\u771f\u7684\u9009\u8fc7\u7684 A \u4e0e B\uff0c\u4ee5\u53ca\u4e8b\u540e\u771f\u5b9e\u53d1\u751f\u7684\u611f\u53d7\uff1b\u6ca1\u9009\u7684\u90a3\u6761\u8def\u4ece\u4e0d\u865a\u6784\u7ed3\u679c\u3002\u628a\u300c\u72b9\u8c6b\u300d\u5b9a\u4e3a\u7eb3\u5165\u6807\u51c6\uff0c\u610f\u5473\u7740\u6837\u672c\u4e0d\u662f\u6240\u6709\u65e5\u5b50\uff0c\u800c\u662f\u4e00\u4e2a\u7cbe\u786e\u5b9a\u4e49\u7684\u5b50\u96c6 \u2014\u2014 \u6070\u597d\u5c31\u662f\u90a3\u4e9b\u771f\u6b63\u9700\u8981\u7b54\u6848\u7684\u65e5\u5b50\uff1b\u4e5f\u610f\u5473\u7740\u6bcf\u4e00\u6761\u6d1e\u5bdf\u90fd\u5fc5\u987b\u663e\u5f0f\u5e26\u4e0a\u8fd9\u4e2a\u6761\u4ef6\u624d\u6210\u7acb\u3002',
-            '\u771f\u6b63\u91cd\u8981\u7684\u662f v0.2\uff0c\u800c\u5b83\u51fa\u81ea\u5bf9\u81ea\u5df1 v0.1 \u7684\u4e00\u6b21\u81ea\u67e5\u3002v0.1 \u628a\u4ef7\u503c\u5168\u90e8\u538b\u5728\u79ef\u7d2f\u4e4b\u540e\u7684\u5bf9\u6bd4\u4e0a\uff1a\u5927\u7ea6\u8981 20\u201330 \u8f6e\u8bb0\u5f55\u3001\u56db\u5230\u516b\u5468\u3002\u800c\u540c\u4e00\u4efd\u6587\u6863\u53c8\u4e3b\u52a8\u653e\u5f03\u4e86\u6253\u5361\u3001\u8fde\u7eed\u5929\u6570\u3001\u7ea2\u70b9\u548c\u63a8\u9001\u3002\u4e24\u4e2a\u51b3\u5b9a\u5404\u81ea\u90fd\u5bf9\uff0c\u653e\u5728\u4e00\u8d77\u662f\u81f4\u547d\u7684 \u2014\u2014 \u524d\u516b\u5468\u65e2\u6ca1\u4e1c\u897f\u53ef\u7ed9\uff0c\u4e5f\u6ca1\u4e1c\u897f\u62f4\u4f4f\u4eba\u3002v0.2 \u6ca1\u6709\u964d\u4f4e\u6d1e\u5bdf\u95e8\u69db\uff0c\u800c\u662f\u65b0\u589e\u4e09\u6761\u4e0d\u4f9d\u8d56\u6837\u672c\u91cf\u7684\u673a\u5236\uff1a\u7b2c\u4e00\u6b21\u8f93\u5165\u5c31\u80fd\u88ab\u597d\u597d\u95ee\u4e00\u4e2a\u95ee\u9898\uff1b\u628a\u9884\u671f\u6298\u8fdb\u9009\u62e9\u7684\u90a3\u4e00\u4e2a\u624b\u52bf\uff0c\u4e8e\u662f\u4e00\u6761\u8bb0\u5f55\u5c31\u80fd\u957f\u51fa\u300c\u4f60\u4ee5\u4e3a 4 \u5206\uff0c\u5b9e\u9645 7 \u5206\u300d\uff1b\u4ee5\u53ca\u540c\u7c7b\u72b9\u8c6b\u7b2c\u4e8c\u6b21\u51fa\u73b0\u65f6\uff0c\u5355\u7eaf\u5730\u8ba4\u51fa\u5b83\u3002',
-            '\u6a21\u578b\u88ab\u62f4\u5f97\u5f88\u77ed\u3002\u6a21\u677f\u547d\u4e2d\u8d70\u672c\u5730\u786e\u5b9a\u6027\u6620\u5c04\uff0c\u672a\u547d\u4e2d\u624d\u8def\u7531\u5230\u4e91\u7aef\uff1b\u8de8\u8bb0\u5f55\u5206\u6790\u57fa\u4e8e\u7528\u6237\u81ea\u5df1\u7684\u5386\u53f2\u505a\u68c0\u7d22\u589e\u5f3a\uff0c\u4e0d\u4ece\u4efb\u4f55\u6cdb\u6cdb\u7684\u5e38\u8bc6\u91cc\u53d6\u3002\u8bed\u6c14\u6309\u6837\u672c\u91cf\u5206\u4e09\u6863\uff1a1 \u6761\u53ea\u80fd\u9648\u8ff0\uff0c2 \u6761\u53ea\u80fd\u5e76\u5217\uff0c\u2265 3 \u6761\u624d\u89e3\u9501\u6bd4\u8f83\u7ea7\u3002n=1 \u65f6\u7cfb\u7edf\u6ca1\u6709\u8d44\u683c\u6bd4\u8f83 \u2014\u2014 \u4f46\u5b83\u6709\u8d44\u683c\u8bb0\u5f97\u3002',
-            '\u96be\u7684\u5730\u65b9\u5728\u4e8e\uff0c\u300c\u88ab\u597d\u597d\u95ee\u4e86\u4e00\u4e2a\u95ee\u9898\u300d\u662f\u4e00\u79cd\u6ca1\u6cd5\u76f4\u63a5\u89c2\u6d4b\u7684\u4ef7\u503c\u3002\u6240\u4ee5\u7ed9\u5b83\u5b9a\u4e86\u4e09\u4e2a\u4ee3\u7406\u6307\u6807\uff1a\u8ffd\u95ee\u51fa\u73b0\u540e\u4e3b\u52a8\u8ffd\u52a0\u6587\u5b57\u7684\u6bd4\u4f8b\u3001\u5230\u505a\u51fa\u9009\u62e9\u7684\u505c\u987f\u65f6\u957f\u3001\u8ffd\u95ee\u540e\u6539\u53d8\u9009\u62e9\u7684\u6bd4\u4f8b\u3002\u7b2c\u4e09\u6761\u662f\u6700\u8bda\u5b9e\u7684\u4e00\u6761 \u2014\u2014 \u5b83\u82e5\u4e3a 0\uff0c\u5c31\u8bf4\u660e\u90a3\u4e2a\u95ee\u9898\u53ea\u662f\u88c5\u9970\u3002\u4ea4\u4ed8\u662f\u53ef\u8fd0\u884c\u7684 UIKit + SpriteKit \u539f\u578b\uff0c1726 \u884c\uff1a\u4e00\u6761\u4ece\u5de6\u4e0b\u5411\u53f3\u4e0a\u6301\u7eed\u5ef6\u4f38\u7684\u8def\uff0c\u4eba\u4e00\u76f4\u5728\u8d70\uff0c\u9009\u62e9\u4ee5\u8def\u6807\u7684\u5f62\u5f0f\u51fa\u73b0\uff0c\u800c\u4e0d\u662f\u5207\u5230\u53e6\u4e00\u4e2a\u9875\u9762\u3002\u8fd9\u91cc\u6545\u610f\u4e0d\u7528 SwiftUI \u2014\u2014 \u8fde\u7eed\u7a7a\u95f4\u5c31\u662f\u8fd9\u4e2a\u4ea7\u54c1\u7684\u9690\u55bb\uff0c\u9875\u9762\u5207\u6362\u4f1a\u628a\u5b83\u78b0\u788e\u3002',
-          ],
-        },
         {
           key: 'artemi',
           name: 'Artemi · 智能宠物项圈',
@@ -583,6 +482,33 @@ export const content = {
             '发布页原本只能从五个写死的城市里选。一个讲「替你去远方」的产品，却让客户端里的一个数组决定什么算远方。现在改成了 MapKit 实时补全，并且特意选 MKLocalSearchCompleter 而不是第三方地点服务 —— 它只做文本检索、不读设备位置，所以不用申请定位权限，也不产生费用。',
             'Apple 要求支持账户删除的 App 必须在删除时撤销登录令牌，审核会实测。写任何生产配置之前，我先拿一个必定无效的 code 去打真实端点，就为了看它怎么拒绝。也没把数据库状态当成撤销成功的证据 —— 唯一认的是 Apple ID 设置里这个 App 真的消失了。',
           ],
+          link: {
+            href: 'https://testflight.apple.com/join/ftyuGZ8n',
+            badgeTop: '在 TestFlight 上',
+            label: '安装测试版',
+            note: '需要 iPhone 并已安装 TestFlight',
+            qr: 'testflight-qr.svg',
+          },
+        },
+        {
+          key: 'roadnottaken',
+          name: '\u672a\u9009\u62e9\u7684\u8def \u00b7 A/B \u4eba\u751f',
+          tagline: '\u66ff\u4eba\u4fdd\u5b58\u51b3\u7b56\u8bb0\u5fc6\uff0c\u8ba9\u4eba\u9010\u6e10\u770b\u6e05\u81ea\u5df1\u3002',
+          date: '2026.08 \u2013 \u81f3\u4eca',
+          role: '\u72ec\u7acb\u4ea7\u54c1\u5b9a\u4e49\u4e0e\u5b9e\u73b0',
+          status: '\u539f\u578b\u5df2\u8dd1\u901a\u5b8c\u6574\u95ed\u73af',
+          stack: 'UIKit \u00b7 SpriteKit \u00b7 Core Animation \u00b7 \u4e91\u7aef\u6a21\u578b',
+          sidenotes: [
+            { k: 'n=0', v: '\u7b2c\u4e00\u4ef7\u503c\u65f6\u523b' },
+            { k: '1726', v: 'Swift \u884c\u6570' },
+            { k: '3 \u6863', v: '\u6d1e\u5bdf\u8bed\u6c14\u7ea6\u675f' },
+          ],
+          desc: [
+            '\u53ea\u5728\u4e00\u4e2a\u4eba\u771f\u7684\u505c\u4e0b\u6765\u72b9\u8c6b\u7684\u90a3\u4e00\u523b\uff0c\u624d\u4ea7\u751f\u4e00\u6761\u8bb0\u5f55\u3002\u5b83\u4fdd\u5b58\u4f60\u771f\u7684\u9009\u8fc7\u7684 A \u4e0e B\uff0c\u4ee5\u53ca\u4e8b\u540e\u771f\u5b9e\u53d1\u751f\u7684\u611f\u53d7\uff1b\u6ca1\u9009\u7684\u90a3\u6761\u8def\u4ece\u4e0d\u865a\u6784\u7ed3\u679c\u3002\u628a\u300c\u72b9\u8c6b\u300d\u5b9a\u4e3a\u7eb3\u5165\u6807\u51c6\uff0c\u610f\u5473\u7740\u6837\u672c\u4e0d\u662f\u6240\u6709\u65e5\u5b50\uff0c\u800c\u662f\u4e00\u4e2a\u7cbe\u786e\u5b9a\u4e49\u7684\u5b50\u96c6 \u2014\u2014 \u6070\u597d\u5c31\u662f\u90a3\u4e9b\u771f\u6b63\u9700\u8981\u7b54\u6848\u7684\u65e5\u5b50\uff1b\u4e5f\u610f\u5473\u7740\u6bcf\u4e00\u6761\u6d1e\u5bdf\u90fd\u5fc5\u987b\u663e\u5f0f\u5e26\u4e0a\u8fd9\u4e2a\u6761\u4ef6\u624d\u6210\u7acb\u3002',
+            '\u771f\u6b63\u91cd\u8981\u7684\u662f v0.2\uff0c\u800c\u5b83\u51fa\u81ea\u5bf9\u81ea\u5df1 v0.1 \u7684\u4e00\u6b21\u81ea\u67e5\u3002v0.1 \u628a\u4ef7\u503c\u5168\u90e8\u538b\u5728\u79ef\u7d2f\u4e4b\u540e\u7684\u5bf9\u6bd4\u4e0a\uff1a\u5927\u7ea6\u8981 20\u201330 \u8f6e\u8bb0\u5f55\u3001\u56db\u5230\u516b\u5468\u3002\u800c\u540c\u4e00\u4efd\u6587\u6863\u53c8\u4e3b\u52a8\u653e\u5f03\u4e86\u6253\u5361\u3001\u8fde\u7eed\u5929\u6570\u3001\u7ea2\u70b9\u548c\u63a8\u9001\u3002\u4e24\u4e2a\u51b3\u5b9a\u5404\u81ea\u90fd\u5bf9\uff0c\u653e\u5728\u4e00\u8d77\u662f\u81f4\u547d\u7684 \u2014\u2014 \u524d\u516b\u5468\u65e2\u6ca1\u4e1c\u897f\u53ef\u7ed9\uff0c\u4e5f\u6ca1\u4e1c\u897f\u62f4\u4f4f\u4eba\u3002v0.2 \u6ca1\u6709\u964d\u4f4e\u6d1e\u5bdf\u95e8\u69db\uff0c\u800c\u662f\u65b0\u589e\u4e09\u6761\u4e0d\u4f9d\u8d56\u6837\u672c\u91cf\u7684\u673a\u5236\uff1a\u7b2c\u4e00\u6b21\u8f93\u5165\u5c31\u80fd\u88ab\u597d\u597d\u95ee\u4e00\u4e2a\u95ee\u9898\uff1b\u628a\u9884\u671f\u6298\u8fdb\u9009\u62e9\u7684\u90a3\u4e00\u4e2a\u624b\u52bf\uff0c\u4e8e\u662f\u4e00\u6761\u8bb0\u5f55\u5c31\u80fd\u957f\u51fa\u300c\u4f60\u4ee5\u4e3a 4 \u5206\uff0c\u5b9e\u9645 7 \u5206\u300d\uff1b\u4ee5\u53ca\u540c\u7c7b\u72b9\u8c6b\u7b2c\u4e8c\u6b21\u51fa\u73b0\u65f6\uff0c\u5355\u7eaf\u5730\u8ba4\u51fa\u5b83\u3002',
+            '\u6a21\u578b\u88ab\u62f4\u5f97\u5f88\u77ed\u3002\u6a21\u677f\u547d\u4e2d\u8d70\u672c\u5730\u786e\u5b9a\u6027\u6620\u5c04\uff0c\u672a\u547d\u4e2d\u624d\u8def\u7531\u5230\u4e91\u7aef\uff1b\u8de8\u8bb0\u5f55\u5206\u6790\u57fa\u4e8e\u7528\u6237\u81ea\u5df1\u7684\u5386\u53f2\u505a\u68c0\u7d22\u589e\u5f3a\uff0c\u4e0d\u4ece\u4efb\u4f55\u6cdb\u6cdb\u7684\u5e38\u8bc6\u91cc\u53d6\u3002\u8bed\u6c14\u6309\u6837\u672c\u91cf\u5206\u4e09\u6863\uff1a1 \u6761\u53ea\u80fd\u9648\u8ff0\uff0c2 \u6761\u53ea\u80fd\u5e76\u5217\uff0c\u2265 3 \u6761\u624d\u89e3\u9501\u6bd4\u8f83\u7ea7\u3002n=1 \u65f6\u7cfb\u7edf\u6ca1\u6709\u8d44\u683c\u6bd4\u8f83 \u2014\u2014 \u4f46\u5b83\u6709\u8d44\u683c\u8bb0\u5f97\u3002',
+            '\u96be\u7684\u5730\u65b9\u5728\u4e8e\uff0c\u300c\u88ab\u597d\u597d\u95ee\u4e86\u4e00\u4e2a\u95ee\u9898\u300d\u662f\u4e00\u79cd\u6ca1\u6cd5\u76f4\u63a5\u89c2\u6d4b\u7684\u4ef7\u503c\u3002\u6240\u4ee5\u7ed9\u5b83\u5b9a\u4e86\u4e09\u4e2a\u4ee3\u7406\u6307\u6807\uff1a\u8ffd\u95ee\u51fa\u73b0\u540e\u4e3b\u52a8\u8ffd\u52a0\u6587\u5b57\u7684\u6bd4\u4f8b\u3001\u5230\u505a\u51fa\u9009\u62e9\u7684\u505c\u987f\u65f6\u957f\u3001\u8ffd\u95ee\u540e\u6539\u53d8\u9009\u62e9\u7684\u6bd4\u4f8b\u3002\u7b2c\u4e09\u6761\u662f\u6700\u8bda\u5b9e\u7684\u4e00\u6761 \u2014\u2014 \u5b83\u82e5\u4e3a 0\uff0c\u5c31\u8bf4\u660e\u90a3\u4e2a\u95ee\u9898\u53ea\u662f\u88c5\u9970\u3002\u4ea4\u4ed8\u662f\u53ef\u8fd0\u884c\u7684 UIKit + SpriteKit \u539f\u578b\uff0c1726 \u884c\uff1a\u4e00\u6761\u4ece\u5de6\u4e0b\u5411\u53f3\u4e0a\u6301\u7eed\u5ef6\u4f38\u7684\u8def\uff0c\u4eba\u4e00\u76f4\u5728\u8d70\uff0c\u9009\u62e9\u4ee5\u8def\u6807\u7684\u5f62\u5f0f\u51fa\u73b0\uff0c\u800c\u4e0d\u662f\u5207\u5230\u53e6\u4e00\u4e2a\u9875\u9762\u3002\u8fd9\u91cc\u6545\u610f\u4e0d\u7528 SwiftUI \u2014\u2014 \u8fde\u7eed\u7a7a\u95f4\u5c31\u662f\u8fd9\u4e2a\u4ea7\u54c1\u7684\u9690\u55bb\uff0c\u9875\u9762\u5207\u6362\u4f1a\u628a\u5b83\u78b0\u788e\u3002',
+          ],
         },
         {
           key: 'milktea',
@@ -601,13 +527,12 @@ export const content = {
             '248 份有效问卷，外加 3 场深度访谈，用羊群效应和锚定效应搭分析框架。',
             '有用的结论是一条天花板，不是一个趋势：超过 65% 的人最多只肯为联名多付 5 元；而动漫 IP 的购买驱动力远超其他所有品类，占 67.7%。据此提了阶梯定价加差异化周边的方案，针对的是联名营销「声量很大、销量很平」这个老毛病。',
           ],
-          link: { href: 'milktea.pdf', label: '读完整报告（PDF）' },
+          link: { href: 'milktea.pdf', badgeTop: '奶茶 IP 联名', label: '读完整报告 PDF' },
         },
       ],
     },
     edu: {
       title: '教育',
-      epigraph: '这是我知道的、最快发现一个论点其实是空的的办法。',
       school: '华中科技大学',
       major: '国际商务 + 英语，双学位',
       date: '2023.09 – 2027.06',
@@ -629,7 +554,6 @@ export const content = {
     },
     log: {
       title: '改版记录',
-      epigraph: '这个网站自己的账，如实记。',
       note: '这个网站自己的账，如实记。',
       items: [
         { v: 'v.I', date: '2026.05.13', text: '第一版。整站在别处生成，然后把一个装着构建产物的文件夹拖进 GitHub。' },

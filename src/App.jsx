@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { content, tools, screens, artemiShots, places, liveDemo } from './content.js'
+import { content, tools, screens, artemiShots, liveDemo } from './content.js'
 import LiveDevice from './LiveDevice.jsx'
 
 // 部署到子目录时（如 /preview/）资源要带前缀；根目录部署时它就是 '/'
@@ -51,8 +51,7 @@ function CopyIcon({ className }) {
 
 // 章节头：章号与章名同行 —— 中文书就是这么排的。
 // 小号等宽的「一」在标题上方只会被当成一根横线，认不出是数字。
-// 题记摘自本章正文，不另写；不需要就删掉 content.js 里那一行 epigraph。
-function SectionHead({ n, children, epigraph, muted }) {
+function SectionHead({ n, children, muted }) {
   return (
     <header className="mb-10">
       <h2 className="display text-4xl sm:text-5xl mb-5">
@@ -60,11 +59,6 @@ function SectionHead({ n, children, epigraph, muted }) {
         {children}
       </h2>
       <div className={`rule rule-lead ${muted}`} />
-      {epigraph && (
-        <p className={`display italic text-[17px] leading-[1.7] max-w-[34rem] mt-5 ${muted}`}>
-          {epigraph}
-        </p>
-      )}
     </header>
   )
 }
@@ -85,276 +79,6 @@ function WithSidenotes({ notes, children, muted }) {
         </aside>
       )}
     </div>
-  )
-}
-
-// ─── 地区串 → 城市 ────────────────────────────────────────────────────────────
-// 真机上那套拆分逻辑的网页版。目标不是「拆得漂亮」，而是结果必须落在服务端
-// 2–24 字的校验窗口里 —— 界面上只有一个地点输入框，城市拆错了用户无从修复。
-const CITY_SUFFIXES = ['自治州', '地区', '盟', '市']
-
-function parseCity(subtitle) {
-  if (!subtitle) return null
-
-  // 拉丁地址：按逗号取第一段，去掉前置邮编。
-  // 「Champ de Mars, 5 Av. Anatole France, 75007 Paris, France」会取到第一段而不是
-  // Paris —— 这是明知的取舍：各国地址格式差太多，猜错比取第一段更糟。
-  if (!/[一-龥]/.test(subtitle)) {
-    const first = subtitle.split(',')[0].trim().replace(/^\d{4,6}\s+/, '')
-    return first ? first.slice(0, 24) : null
-  }
-
-  let s = subtitle.replace(/^中国/, '')
-
-  const sar = s.match(/^(香港|澳门)特别行政区/)
-  if (sar) return sar[0]
-
-  // 省级前缀切掉；非贪婪，避免把后面的地级单位一起吃了
-  s = s.replace(/^.{2,9}?自治区/, '').replace(/^.{2,7}?省/, '')
-
-  // 取最早收尾的那个地级单位。「丽江市玉龙纳西族自治县」必须停在丽江市，
-  // 「西双版纳傣族自治州景洪市」必须停在州而不是被后面的县级市抢走。
-  let end = null
-  for (const suf of CITY_SUFFIXES) {
-    const i = s.indexOf(suf)
-    if (i > 0) {
-      const e = i + suf.length
-      if (end === null || e < end) end = e
-    }
-  }
-  if (!end) return null
-  return s.slice(0, end).slice(0, 24)
-}
-
-// ─── 发布流程：亲手试一次 ─────────────────────────────────────────────────────
-function PublishDemo({ w, lang, muted, dark }) {
-  const d = w.proj.demo
-  const CITIES = lang === 'en'
-    ? ['Hangzhou', 'Shanghai', 'Beijing', 'Shenzhen', 'Guangzhou']
-    : ['杭州', '上海', '北京', '深圳', '广州']
-
-  const [mode, setMode] = useState('before')
-  const [scene, setScene] = useState(0)
-  const [city, setCity] = useState(CITIES[0])
-  const [landmark, setLandmark] = useState('')
-  const [query, setQuery] = useState('')
-  const [picked, setPicked] = useState(null)
-  const [done, setDone] = useState(false)
-
-  const reset = m => {
-    setMode(m); setScene(0); setCity(CITIES[0])
-    setLandmark(''); setQuery(''); setPicked(null); setDone(false)
-  }
-
-  const matches = query.trim()
-    ? places.filter(p => (p.t + p.s).toLowerCase().includes(query.trim().toLowerCase())).slice(0, 4)
-    : []
-
-  // 改造后：选中补全结果就用拆出来的城市；手输则退回地点名本身（服务端仍要 2–24 字）
-  const afterCity = picked ? (parseCity(picked.s) || picked.t.slice(0, 24)) : query.trim().slice(0, 24)
-  const afterSpot = picked ? picked.t : query.trim()
-  const ready = mode === 'before' ? landmark.trim().length > 0 : afterSpot.length > 0
-
-  // App 自己的颜色，跟网站版面无关 —— 它是一台设备，不是这一页的一部分
-  const C = { rose: '#9A536D', deep: '#7F4058', soft: '#E4C6D0', tint: '#FAF4F6', ink: '#191719', line: '#EAEAEA' }
-
-  return (
-    <figure className="mt-14">
-      <figcaption className={`font-mono text-[11px] tracking-[0.18em] uppercase mb-5 ${muted}`}>
-        {d.label}
-      </figcaption>
-
-      <div className="md:grid md:grid-cols-[21rem_minmax(0,1fr)] md:gap-x-12 items-start">
-        {/* ── 设备 ── */}
-        <div className="w-full max-w-[21rem] rounded-[2rem] border-[6px] border-[#17161a] overflow-hidden bg-white shadow-lg">
-          <div className="px-5 pt-4 pb-3 flex items-center justify-between" style={{ color: C.ink }}>
-            <span className="text-[15px] font-semibold">{lang === 'en' ? 'New wish' : '发布心愿'}</span>
-            <span className="text-[13px]" style={{ color: '#8A8A8A' }}>{lang === 'en' ? 'Cancel' : '取消'}</span>
-          </div>
-
-          <div className="px-5">
-            <div className="flex items-baseline justify-between mb-2">
-              <span className="text-[12px]" style={{ color: '#8A8A8A' }}>{d.stepOf}</span>
-              <span className="text-[12px]" style={{ color: C.rose }}>{d.stepName}</span>
-            </div>
-            <div className="flex gap-1.5 mb-5">
-              <span className="h-[3px] flex-1 rounded-full" style={{ background: C.rose }} />
-              <span className="h-[3px] flex-1 rounded-full" style={{ background: C.line }} />
-              <span className="h-[3px] flex-1 rounded-full" style={{ background: C.line }} />
-            </div>
-          </div>
-
-          {done ? (
-            <div className="px-5 pb-7 pt-2">
-              <p className="text-[17px] font-semibold mb-4" style={{ color: C.ink }}>
-                {lang === 'en' ? 'Ready to post' : '可以发布了'}
-              </p>
-              <dl className="text-[14px] space-y-3 mb-5">
-                <div className="flex gap-3">
-                  <dt className="w-12 shrink-0" style={{ color: '#8A8A8A' }}>{d.cityField}</dt>
-                  <dd style={{ color: C.ink }}>{mode === 'before' ? city : afterCity}</dd>
-                </div>
-                <div className="flex gap-3">
-                  <dt className="w-12 shrink-0" style={{ color: '#8A8A8A' }}>{d.landmarkField}</dt>
-                  <dd style={{ color: C.ink }}>{mode === 'before' ? landmark : afterSpot}</dd>
-                </div>
-                <div className="flex gap-3">
-                  <dt className="w-12 shrink-0" style={{ color: '#8A8A8A' }}>{d.sceneLabel}</dt>
-                  <dd style={{ color: C.ink }}>{d.scenes[scene]}</dd>
-                </div>
-              </dl>
-              <p className="text-[12px] leading-relaxed mb-5" style={{ color: '#8A8A8A' }}>{d.done}</p>
-              <button
-                onClick={() => reset(mode)}
-                className="w-full py-3 rounded-xl text-[15px] font-medium"
-                style={{ background: C.tint, color: C.rose, border: `1px solid ${C.soft}` }}
-              >
-                {d.reset}
-              </button>
-            </div>
-          ) : (
-            <div className="px-5 pb-6">
-              <p className="text-[19px] font-semibold" style={{ color: C.ink }}>{d.title}</p>
-              <p className="text-[13px] mt-1 mb-5" style={{ color: '#8A8A8A' }}>{d.sub}</p>
-
-              <p className="text-[14px] font-semibold mb-2.5" style={{ color: C.ink }}>{d.sceneLabel}</p>
-              <div className="grid grid-cols-2 gap-2 mb-5">
-                {d.scenes.map((s, i) => (
-                  <button
-                    key={s}
-                    onClick={() => setScene(i)}
-                    className="py-2.5 rounded-xl text-[13px] transition-colors"
-                    style={{
-                      background: i === scene ? C.tint : '#fff',
-                      color: i === scene ? C.rose : C.ink,
-                      border: `1px solid ${i === scene ? C.rose : C.line}`,
-                    }}
-                  >
-                    {s}
-                  </button>
-                ))}
-              </div>
-
-              {mode === 'before' ? (
-                <>
-                  <p className="text-[14px] font-semibold mb-2.5" style={{ color: C.ink }}>{d.cityLabel}</p>
-                  {/* 五个胶囊必须挤在一行 —— 真机上就是一行，换行会削弱「只有这么多」的观感 */}
-                  <div className="flex flex-nowrap gap-1.5 mb-5">
-                    {CITIES.map(c => (
-                      <button
-                        key={c}
-                        onClick={() => setCity(c)}
-                        className="px-2.5 py-1.5 rounded-full text-[12px] whitespace-nowrap transition-colors"
-                        style={{
-                          background: c === city ? C.rose : '#fff',
-                          color: c === city ? '#fff' : C.ink,
-                          border: `1px solid ${c === city ? C.rose : C.line}`,
-                        }}
-                      >
-                        {c}
-                      </button>
-                    ))}
-                  </div>
-
-                  <p className="text-[14px] font-semibold mb-2.5" style={{ color: C.ink }}>{d.landmarkLabel}</p>
-                  <input
-                    value={landmark}
-                    onChange={e => setLandmark(e.target.value)}
-                    placeholder={d.landmarkPlaceholder}
-                    className="w-full px-4 py-3 rounded-xl text-[14px] outline-none"
-                    style={{ background: C.tint, border: `1px solid ${C.soft}`, color: C.ink }}
-                  />
-                </>
-              ) : (
-                <>
-                  <p className="text-[14px] font-semibold mb-2.5" style={{ color: C.ink }}>{d.landmarkLabel}</p>
-                  <input
-                    value={query}
-                    onChange={e => { setQuery(e.target.value); setPicked(null) }}
-                    placeholder={d.searchPlaceholder}
-                    className="w-full px-4 py-3 rounded-xl text-[14px] outline-none"
-                    style={{ background: C.tint, border: `1px solid ${C.soft}`, color: C.ink }}
-                  />
-
-                  {query.trim() && !picked && (
-                    <ul className="mt-2 rounded-xl overflow-hidden" style={{ border: `1px solid ${C.line}` }}>
-                      {matches.map(p => (
-                        <li key={p.t}>
-                          <button
-                            onClick={() => { setPicked(p); setQuery(p.t) }}
-                            className="w-full text-left px-4 py-2.5"
-                            style={{ borderBottom: `1px solid ${C.line}` }}
-                          >
-                            <span className="block text-[14px]" style={{ color: C.ink }}>{p.t}</span>
-                            <span className="block text-[11px] mt-0.5" style={{ color: '#9A9A9A' }}>{p.s}</span>
-                          </button>
-                        </li>
-                      ))}
-                      {matches.length === 0 && (
-                        <li className="px-4 py-2.5 text-[12px]" style={{ color: '#9A9A9A' }}>{d.noMatch}</li>
-                      )}
-                    </ul>
-                  )}
-
-                  {/* 拆分结果：这一小块就是那套逻辑的全部产出 */}
-                  {afterSpot && (
-                    <div className="mt-4 p-3.5 rounded-xl" style={{ background: C.tint, border: `1px solid ${C.soft}` }}>
-                      <div className="flex gap-3 text-[13px]">
-                        <span className="w-9 shrink-0" style={{ color: '#8A8A8A' }}>{d.cityField}</span>
-                        <span style={{ color: C.deep }}>{afterCity}</span>
-                      </div>
-                      <div className="flex gap-3 text-[13px] mt-1.5">
-                        <span className="w-9 shrink-0" style={{ color: '#8A8A8A' }}>{d.landmarkField}</span>
-                        <span style={{ color: C.ink }}>{afterSpot}</span>
-                      </div>
-                      {picked?.s && (
-                        <p className="text-[11px] mt-2.5 leading-snug" style={{ color: '#9A9A9A' }}>
-                          {d.parsedFrom}「{picked.s}」
-                        </p>
-                      )}
-                    </div>
-                  )}
-                </>
-              )}
-
-              <button
-                disabled={!ready}
-                onClick={() => setDone(true)}
-                className="w-full mt-6 py-3 rounded-xl text-[15px] font-medium transition-opacity"
-                style={{ background: C.rose, color: '#fff', opacity: ready ? 1 : 0.35 }}
-              >
-                {d.cont}
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* ── 说明 ── */}
-        <div className="mt-8 md:mt-0 max-w-prose">
-          <div className="flex gap-2 mb-5">
-            {[['before', d.before], ['after', d.after]].map(([m, label]) => (
-              <button
-                key={m}
-                onClick={() => reset(m)}
-                className={`px-3.5 py-1.5 text-[13px] border transition-colors ${
-                  mode === m
-                    ? 'bg-cinnabar text-white border-cinnabar dark:bg-[#E08A72] dark:border-[#E08A72] dark:text-[#141310]'
-                    : `${dark ? 'border-[#2A2621]' : 'border-rule'} ${muted} hover:text-cinnabar dark:hover:text-[#E08A72]`
-                }`}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-
-          <p className={`text-[15px] leading-[1.75] ${dark ? 'text-[#C4BEB3]' : 'text-[#3D3831]'}`}>
-            {mode === 'before' ? d.beforeHint : d.afterHint}
-          </p>
-
-          <p className={`text-[12px] leading-relaxed mt-6 ${muted}`}>{d.disclaimer}</p>
-        </div>
-      </div>
-    </figure>
   )
 }
 
@@ -603,7 +327,7 @@ export default function App() {
 
           {/* ── 实习 ── */}
           <section id="experience" className="scroll-mt-20">
-            <SectionHead n={w.toc.items[0].n} epigraph={w.exp.epigraph} muted={rule}>{w.exp.title}</SectionHead>
+            <SectionHead n={w.toc.items[0].n} muted={rule}>{w.exp.title}</SectionHead>
 
             <div className="space-y-16">
               {w.exp.items.map(item => (
@@ -633,7 +357,7 @@ export default function App() {
 
           {/* ── 项目 ── */}
           <section id="work" className="scroll-mt-20">
-            <SectionHead n={w.toc.items[1].n} epigraph={w.proj.epigraph} muted={rule}>{w.proj.title}</SectionHead>
+            <SectionHead n={w.toc.items[1].n} muted={rule}>{w.proj.title}</SectionHead>
 
             <div className="space-y-20">
               {w.proj.items.map(proj => (
@@ -661,7 +385,6 @@ export default function App() {
 
                   {proj.key === 'gratia' && (
                     <>
-                      <PublishDemo w={w} lang={lang} muted={muted} dark={dark} />
                       {/* 真机在截图前面：能点的东西一旦出现，静态图就只是它的注脚 */}
                       <LiveDevice
                         cfg={liveDemo.gratia}
@@ -692,16 +415,51 @@ export default function App() {
                   )}
 
                   {proj.link && (
-                    <p className="mt-9">
+                    <div className="mt-9 flex items-center gap-5 flex-wrap">
+                      {/* 徽章形制沿用应用商店那种药丸按钮的分量，但不借用任何 Apple 标识 ——
+                          这个 App 还在 TestFlight 外测、没有上架，挂「Download on the App Store」
+                          既违反品牌规范，也等于对读者说了一件不成立的事。 */}
                       <a
-                        href={`${BASE}${proj.link.href}`}
+                        // 站内文件（milktea.pdf）要带部署前缀，外链不能带 ——
+                        // 否则 https://… 会被拼成 /https://…
+                        href={/^https?:\/\//.test(proj.link.href) ? proj.link.href : `${BASE}${proj.link.href}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="link font-mono text-[13px] text-cinnabar dark:text-[#E08A72]"
+                        className={`shrink-0 inline-flex items-center gap-3 rounded-[10px] px-5 py-2.5 transition-colors
+                          ${dark ? 'bg-[#E8E3D9] text-[#141310] hover:bg-white' : 'bg-[#1C1A18] text-[#F7F4EE] hover:bg-black'}`}
                       >
-                        {proj.link.label} →
+                        <svg className="w-6 h-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                          strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                          <path d="M12 3v12" />
+                          <path d="M7.5 10.5 12 15l4.5-4.5" />
+                          <path d="M4.5 17.5v1.2a1.8 1.8 0 0 0 1.8 1.8h11.4a1.8 1.8 0 0 0 1.8-1.8v-1.2" />
+                        </svg>
+                        <span className="leading-tight text-left">
+                          <span className="block text-[10px] tracking-[0.14em] uppercase opacity-70">
+                            {proj.link.badgeTop}
+                          </span>
+                          <span className="block text-[15px] font-medium">{proj.link.label}</span>
+                        </span>
                       </a>
-                    </p>
+
+                      {/* 二维码只在桌面端出现：手机扫自己的屏幕没有意义，那里点按钮就行。
+                          底色恒为白 —— 深色模式下把码衬在深底上会扫不出来。 */}
+                      {proj.link.qr && (
+                        <a
+                          href={proj.link.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="hidden sm:block shrink-0 bg-white p-1.5 rounded-[10px] border border-rule"
+                          aria-label={proj.link.label}
+                        >
+                          <img src={`${BASE}${proj.link.qr}`} alt="" className="w-[68px] h-[68px]" />
+                        </a>
+                      )}
+
+                      {proj.link.note && (
+                        <span className={`font-mono text-[11px] ${muted}`}>{proj.link.note}</span>
+                      )}
+                    </div>
                   )}
                 </article>
               ))}
@@ -710,7 +468,7 @@ export default function App() {
 
           {/* ── 教育 ── */}
           <section id="education" className="scroll-mt-20">
-            <SectionHead n={w.toc.items[2].n} epigraph={w.edu.epigraph} muted={rule}>{w.edu.title}</SectionHead>
+            <SectionHead n={w.toc.items[2].n} muted={rule}>{w.edu.title}</SectionHead>
 
             <div className="md:grid md:grid-cols-[minmax(0,1fr)_9.5rem] md:gap-x-12">
               <div className="max-w-prose space-y-10">
@@ -741,7 +499,7 @@ export default function App() {
 
           {/* ── 改版记录 ── */}
           <section id="changelog" className="scroll-mt-20">
-            <SectionHead n={w.toc.items[3].n} epigraph={w.log.epigraph} muted={rule}>{w.log.title}</SectionHead>
+            <SectionHead n={w.toc.items[3].n} muted={rule}>{w.log.title}</SectionHead>
 
             <p className={`max-w-prose text-[15px] italic mb-9 ${muted}`}>{w.log.note}</p>
 
