@@ -5,7 +5,6 @@
 //   exp.items[] / proj.items[]  —— 倒序，最新的放最前
 //   sidenotes[]                 —— 渲染到版心右侧的边注，不是卡片；一段最多 4 条
 //   desc[]                      —— '||' 前是小标题，后是正文；不带 '||' 则整条是正文
-//   log.items[]                 —— 改版记录，只写真的发生过的事
 //
 // 写文案的规矩（上一版栽在这上面）：
 //   不用「赋能 / 沉淀 / 闭环 / 抓手 / 助力」这类词；
@@ -96,7 +95,7 @@ export const artemiShots = [
 
 export const content = {
   en: {
-    nav: { exp: 'Experience', proj: 'Work', edu: 'Education', log: 'Changelog', dl: 'Résumé' },
+    nav: { exp: 'Experience', proj: 'Work', edu: 'Education', dl: 'Résumé' },
     hero: {
       name: 'Hansel Zhang',
       nameAlt: '张增辉',
@@ -122,7 +121,6 @@ export const content = {
         { n: 'I', label: 'Experience', href: '#experience' },
         { n: 'II', label: 'Work', href: '#work' },
         { n: 'III', label: 'Education', href: '#education' },
-        { n: '—', label: 'Changelog', href: '#changelog' },
       ],
     },
     exp: {
@@ -295,15 +293,6 @@ export const content = {
         },
       ],
     },
-    log: {
-      title: 'Changelog',
-      note: 'This site, honestly accounted for.',
-      items: [
-        { v: 'v.I', date: '13 May 2026', text: 'First version. Generated somewhere else, then dragged into GitHub as a folder of built files.' },
-        { v: 'v.II', date: '14 May 2026', text: 'Edited the content. Which meant uploading an entire build again.' },
-        { v: 'v.III–IV', date: '18 May 2026', text: 'Twice more. Web uploads only ever add files, so the repo quietly accumulated four sets of assets, three of which nothing referenced.' },
-      ],
-    },
     footer: {
       rights: 'All rights reserved.',
       colophon: 'Instrument Serif & DM Sans. React, Vite. No analytics.',
@@ -311,7 +300,7 @@ export const content = {
   },
 
   zh: {
-    nav: { exp: '实习', proj: '做过的东西', edu: '教育', log: '改版记录', dl: '简历' },
+    nav: { exp: '实习', proj: '做过的东西', edu: '教育', dl: '简历' },
     hero: {
       name: '张增辉',
       nameAlt: 'Hansel Zhang',
@@ -336,7 +325,6 @@ export const content = {
         { n: '一', label: '实习', href: '#experience' },
         { n: '二', label: '做过的东西', href: '#work' },
         { n: '三', label: '教育', href: '#education' },
-        { n: '附', label: '改版记录', href: '#changelog' },
       ],
     },
     exp: {
@@ -508,15 +496,6 @@ export const content = {
           date: '2024.10 – 2025.10',
           desc: '主导数十篇推文的策划与排版，跟进重点活动，在校级官网发表核心文章。',
         },
-      ],
-    },
-    log: {
-      title: '改版记录',
-      note: '这个网站自己的账，如实记。',
-      items: [
-        { v: 'v.I', date: '2026.05.13', text: '第一版。整站在别处生成，然后把一个装着构建产物的文件夹拖进 GitHub。' },
-        { v: 'v.II', date: '2026.05.14', text: '改了点内容。也就是说，又整个上传了一次构建产物。' },
-        { v: 'v.III–IV', date: '2026.05.18', text: '又来了两次。网页上传只加不删，仓库里于是攒下四组 assets，其中三组没有任何地方引用。' },
       ],
     },
     footer: {

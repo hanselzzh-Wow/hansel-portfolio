@@ -209,7 +209,6 @@ export default function App() {
             <a href="#experience" className="link">{w.nav.exp}</a>
             <a href="#work" className="link">{w.nav.proj}</a>
             <a href="#education" className="link">{w.nav.edu}</a>
-            <a href="#changelog" className="link">{w.nav.log}</a>
           </div>
 
           <div className={`flex items-center gap-4 text-[13px] ${muted}`}>
@@ -490,25 +489,6 @@ export default function App() {
 
               <p className={`font-mono text-[12px] mt-6 md:mt-1.5 ${muted}`}>{w.edu.date}</p>
             </div>
-          </section>
-
-          {/* ── 改版记录 ── */}
-          <section id="changelog" className="scroll-mt-20">
-            <SectionHead n={w.toc.items[3].n} muted={rule}>{w.log.title}</SectionHead>
-
-            <p className={`max-w-prose text-[15px] italic mb-9 ${muted}`}>{w.log.note}</p>
-
-            <ol className="max-w-prose space-y-6">
-              {w.log.items.map(entry => (
-                <li key={entry.v} className="flex gap-5 sm:gap-7">
-                  <div className="shrink-0 w-16 sm:w-20">
-                    <div className="font-mono text-[13px] text-cinnabar dark:text-[#E08A72]">{entry.v}</div>
-                    <div className={`font-mono text-[10px] mt-0.5 ${muted}`}>{entry.date}</div>
-                  </div>
-                  <p className={`text-[15px] leading-[1.75] ${body}`}>{entry.text}</p>
-                </li>
-              ))}
-            </ol>
           </section>
         </main>
       </div>
