@@ -294,11 +294,6 @@ export default function App() {
               </div>
             ))}
           </dl>
-
-          {/* 版次：和改版记录里的 v.V 指的是同一件事 */}
-          <p className={`font-mono text-[11px] tracking-wide mt-14 pt-5 border-t max-w-prose ${muted} ${dark ? 'border-[#2A2621]' : 'border-rule'}`}>
-            {w.hero.edition}
-          </p>
         </section>
 
         {/* ── 目录 ── 点线一路引到右边的章号，位置就是书里页码的位置 */}
@@ -420,7 +415,7 @@ export default function App() {
                           这个 App 还在 TestFlight 外测、没有上架，挂「Download on the App Store」
                           既违反品牌规范，也等于对读者说了一件不成立的事。 */}
                       <a
-                        // 站内文件（milktea.pdf）要带部署前缀，外链不能带 ——
+                        // 站内文件要带部署前缀，外链不能带 ——
                         // 否则 https://… 会被拼成 /https://…
                         href={/^https?:\/\//.test(proj.link.href) ? proj.link.href : `${BASE}${proj.link.href}`}
                         target="_blank"

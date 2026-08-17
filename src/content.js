@@ -106,7 +106,6 @@ export const content = {
       emailLabel: 'Email',
       phoneLabel: 'Phone',
       copied: 'copied',
-      edition: 'Fifth edition · August 2026 · Wuhan',
     },
     // 前言在目录之前 —— 「请翻下一页」翻到的就是目录，这句话在网页上要真的成立
     preface: {
@@ -273,25 +272,6 @@ export const content = {
             '模型只做一件事：把一团纠结拆成两条路。模板命中走本地，未命中才去云端。语气按样本量分档 —— 1 条只能陈述，≥3 条才允许比较级。n=1 时系统没有资格比较，但有资格记得。',
           ],
         },
-        {
-          key: 'milktea',
-          name: 'Milk Tea IP Collab',
-          tagline: 'Why collabs get attention and not purchases.',
-          date: 'Oct 2024',
-          role: 'Team lead',
-          status: '',
-          stack: 'Survey design · Interviews · Behavioral models',
-          sidenotes: [
-            { k: '248', v: 'valid responses' },
-            { k: '¥5', v: 'premium ceiling' },
-            { k: '67.7%', v: 'anime IP' },
-          ],
-          desc: [
-            'Two hundred forty-eight valid questionnaires and three long interviews, framed with herd effect and anchoring.',
-            'The useful finding was a ceiling, not a trend: more than 65% would pay at most ¥5 extra for a collab, and anime IP drove purchase intent far past every other category at 67.7%. That turned into a tiered-pricing plus differentiated-merch proposal aimed at the old problem where a campaign is loud and sales are flat.',
-          ],
-          link: { href: 'milktea.pdf', badgeTop: 'Milk tea IP collab', label: 'Read the full report' },
-        },
       ],
     },
     edu: {
@@ -322,7 +302,6 @@ export const content = {
         { v: 'v.I', date: '13 May 2026', text: 'First version. Generated somewhere else, then dragged into GitHub as a folder of built files.' },
         { v: 'v.II', date: '14 May 2026', text: 'Edited the content. Which meant uploading an entire build again.' },
         { v: 'v.III–IV', date: '18 May 2026', text: 'Twice more. Web uploads only ever add files, so the repo quietly accumulated four sets of assets, three of which nothing referenced.' },
-        { v: 'v.V', date: '10 Aug 2026', text: 'Added the source — and found out along the way that the previous four versions never had any. Rebuilt as an editorial layout, because the old one looked like every other AI-generated résumé site.' },
       ],
     },
     footer: {
@@ -342,8 +321,6 @@ export const content = {
       emailLabel: '邮箱',
       phoneLabel: '电话',
       copied: '已复制',
-      // 版次跟改版记录里的 v.V 是同一件事，不是装饰
-      edition: '第五版 · 2026 年 8 月 · 武汉',
     },
     preface: {
       title: '前言',
@@ -510,25 +487,6 @@ export const content = {
             '\u96be\u7684\u5730\u65b9\u5728\u4e8e\uff0c\u300c\u88ab\u597d\u597d\u95ee\u4e86\u4e00\u4e2a\u95ee\u9898\u300d\u662f\u4e00\u79cd\u6ca1\u6cd5\u76f4\u63a5\u89c2\u6d4b\u7684\u4ef7\u503c\u3002\u6240\u4ee5\u7ed9\u5b83\u5b9a\u4e86\u4e09\u4e2a\u4ee3\u7406\u6307\u6807\uff1a\u8ffd\u95ee\u51fa\u73b0\u540e\u4e3b\u52a8\u8ffd\u52a0\u6587\u5b57\u7684\u6bd4\u4f8b\u3001\u5230\u505a\u51fa\u9009\u62e9\u7684\u505c\u987f\u65f6\u957f\u3001\u8ffd\u95ee\u540e\u6539\u53d8\u9009\u62e9\u7684\u6bd4\u4f8b\u3002\u7b2c\u4e09\u6761\u662f\u6700\u8bda\u5b9e\u7684\u4e00\u6761 \u2014\u2014 \u5b83\u82e5\u4e3a 0\uff0c\u5c31\u8bf4\u660e\u90a3\u4e2a\u95ee\u9898\u53ea\u662f\u88c5\u9970\u3002\u4ea4\u4ed8\u662f\u53ef\u8fd0\u884c\u7684 UIKit + SpriteKit \u539f\u578b\uff0c1726 \u884c\uff1a\u4e00\u6761\u4ece\u5de6\u4e0b\u5411\u53f3\u4e0a\u6301\u7eed\u5ef6\u4f38\u7684\u8def\uff0c\u4eba\u4e00\u76f4\u5728\u8d70\uff0c\u9009\u62e9\u4ee5\u8def\u6807\u7684\u5f62\u5f0f\u51fa\u73b0\uff0c\u800c\u4e0d\u662f\u5207\u5230\u53e6\u4e00\u4e2a\u9875\u9762\u3002\u8fd9\u91cc\u6545\u610f\u4e0d\u7528 SwiftUI \u2014\u2014 \u8fde\u7eed\u7a7a\u95f4\u5c31\u662f\u8fd9\u4e2a\u4ea7\u54c1\u7684\u9690\u55bb\uff0c\u9875\u9762\u5207\u6362\u4f1a\u628a\u5b83\u78b0\u788e\u3002',
           ],
         },
-        {
-          key: 'milktea',
-          name: '奶茶 IP 联名',
-          tagline: '为什么联名有声量，却没有转化。',
-          date: '2024.10',
-          role: '项目组长',
-          status: '',
-          stack: '问卷设计 · 深度访谈 · 行为学模型',
-          sidenotes: [
-            { k: '248', v: '有效样本' },
-            { k: '5 元', v: '溢价上限' },
-            { k: '67.7%', v: '动漫 IP' },
-          ],
-          desc: [
-            '248 份有效问卷，外加 3 场深度访谈，用羊群效应和锚定效应搭分析框架。',
-            '有用的结论是一条天花板，不是一个趋势：超过 65% 的人最多只肯为联名多付 5 元；而动漫 IP 的购买驱动力远超其他所有品类，占 67.7%。据此提了阶梯定价加差异化周边的方案，针对的是联名营销「声量很大、销量很平」这个老毛病。',
-          ],
-          link: { href: 'milktea.pdf', badgeTop: '奶茶 IP 联名', label: '读完整报告 PDF' },
-        },
       ],
     },
     edu: {
@@ -559,7 +517,6 @@ export const content = {
         { v: 'v.I', date: '2026.05.13', text: '第一版。整站在别处生成，然后把一个装着构建产物的文件夹拖进 GitHub。' },
         { v: 'v.II', date: '2026.05.14', text: '改了点内容。也就是说，又整个上传了一次构建产物。' },
         { v: 'v.III–IV', date: '2026.05.18', text: '又来了两次。网页上传只加不删，仓库里于是攒下四组 assets，其中三组没有任何地方引用。' },
-        { v: 'v.V', date: '2026.08.10', text: '补上了源码 —— 顺便发现前四版压根就没有过源码。整站按编辑排版重做，因为上一版长得和所有 AI 生成的简历站一模一样。' },
       ],
     },
     footer: {
